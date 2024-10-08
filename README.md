@@ -59,7 +59,8 @@ Data can be explored in the [population notebook](population-eda.ipynb) and the 
 ### Limitations 
 * The data does not incorporate Land-use-land-cover distribution, although it is an essential factor, if not the most essential when it comes to the UHI effect. However, the spectral indices serve as a proxy. Moreover, since they are calculated from the bands of images, temporal changes are readily reflected in this computation. 
     * Although Google Earth engine provides the CORINE dataset, which would've greatly contributed for the ease of integration, we found an inconsistency. The problematic region is easily observable: 
-<img src="./data/output-corine-detailed.gif" alt="img" width="50%">
+<img src="./data/output-corine-detailed.gif" alt="img" width="50%">  
+
 
     Hence the question of the overall correctess of the Land-use-land-cover datasets remains open. 
 
