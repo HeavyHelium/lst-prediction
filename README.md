@@ -62,9 +62,9 @@ Data can be explored in the [population notebook](population-eda.ipynb) and the 
 <img src="./data/output-corine-detailed.gif" alt="img" width="50%">  
 
 
-    Hence the question of the overall correctess of the Land-use-land-cover datasets remains open. 
+Hence the question of the overall correctess of the Land-use-land-cover datasets remains open. 
 
-    Urban Atlas, on the other hand, which is indeed more consistent and precise(by virtue of it being a vector dataset), is temporally limited. Even more so, is not available through the GEE API and thus its integration would be quite arduous. 
+Urban Atlas, on the other hand, which is indeed more consistent and precise(by virtue of it being a vector dataset), is temporally limited. Even more so, is not available through the GEE API and thus its integration would be quite arduous. 
 
 * The satellite imagery collected is temporally limited - all Landsat photos of the area are taken at around 9:00 Greenwich Mean Time(GMT). 
     * During Daylight Saving time, Bulgaria shifts to GMT+3 hence the time of taking the imagery is 12 at noon Local Standard Time 
