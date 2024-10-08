@@ -36,6 +36,7 @@ All imagery has been resampled to the least precise resolution of *120m*.
 
 Data can be explored in the [population notebook](population-eda.ipynb) and the [remote sensing demo notebook](demo.ipynb). 
 
+
 ### [Pythonic Workflow](lst-and-indices-retrieval.ipynb) 
 
 1. Collection and preprocessing
@@ -48,8 +49,29 @@ Data can be explored in the [population notebook](population-eda.ipynb) and the 
     * clipping and visualization 
     * conversion to numpy arrays for dataset formation
 * ```geopandas``` for vector data handling 
-* ```raster_stasts``` to get zonal statistics for Sofia Municipality  
+* ```raster_stasts``` to  derive zonal statistics for Sofia Municipality  
 
 3. Machine Learning Experiment 
 
 * ```sklearn``` for model training and validation 
+
+
+### Limitations 
+* The data does not incorporate Land-use-land-cover distribution, although it is an essential factor, if not the most essential when it comes to the UHI effect. However, the spectral indices serve as a proxy. Moreover, since they are calculated from the bands of images, temporal changes are readily reflected in this computation. 
+    * Although Google Earth engine provides the CORINE dataset, which would've greatly contributed for the ease of integration, we found an inconsistency. The problematic region is easily observable: 
+<img src="./data/output-corine-detailed.gif" alt="img" width="50%">
+
+    Hence the question of the overall correctess of the Land-use-land-cover datasets remains open. 
+
+    Urban Atlas, on the other hand, which is indeed more consistent and precise(by virtue of it being a vector dataset), is temporally limited. Even more so, is not available through the GEE API and thus its integration would be quite arduous. 
+
+* The satellite imagery collected is temporally limited - all Landsat photos of the area are taken at around 9:00 Greenwich Mean Time(GMT). 
+    * During Daylight Saving time, Bulgaria shifts to GMT+3 hence the time of taking the imagery is 12 at noon Local Standard Time 
+    * Otherwise, GMT+2 -- 11 AM 
+
+    Unfortunatelly, the UHI effect is weakest at around noon, especially in the summer. This limitation of remote sensing data acts as a hindrance in the analysis of SUHI(Surface Urban Heat Island effect). 
+
+* Other factors which contribute to the LST such as Elevation, Albedo and other socioeconomic factors(e.g. social status, mean family income, etc.) have not been taken into account due to lack of data availability 
+
+* More advanced Machine learning algorithms are yet to be explored in terms of their suitability for the regression problem.
+
