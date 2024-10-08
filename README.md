@@ -17,7 +17,7 @@ The data used is **selected** with a Google Earth Engine **JS** script which can
 It should be noted that only images with cloud coverage of less than 10% have been picked, which is efficiently carried out on the Google Earth Engine Server. 
 
 Landsat Collection 2 served as the main source of data for this experiment. The choice of this image collection product was based on the following factors: 
-* Atmopheric correction has already been performed 
+* Atmospheric correction has already been performed 
 * It is well documented 
 * Includes a Surface Temperature product 
 * Wide temporal availability - imagery has been preprocessed for the Landsat 4/5/7/8/9 satellite generations
@@ -58,7 +58,8 @@ Data can be explored in the [population notebook](population-eda.ipynb) and the 
 
 ### Limitations 
 * The data does not incorporate Land-use-land-cover distribution, although it is an essential factor, if not the most essential when it comes to the UHI effect. However, the spectral indices serve as a proxy. Moreover, since they are calculated from the bands of images, temporal changes are readily reflected in this computation. 
-    * Although Google Earth engine provides the CORINE dataset, which would've greatly contributed for the ease of integration, we found an inconsistency. The problematic region is easily observable: 
+    * Although Google Earth engine provides the CORINE dataset, which would've greatly contributed for the ease of integration, we found an inconsistency. The problematic region is easily observable:   
+    
 <img src="./data/output-corine-detailed.gif" alt="img" width="50%">  
 
 
@@ -70,7 +71,7 @@ Urban Atlas, on the other hand, which is indeed more consistent and precise(by v
     * During Daylight Saving time, Bulgaria shifts to GMT+3 hence the time of taking the imagery is 12 at noon Local Standard Time 
     * Otherwise, GMT+2 -- 11 AM 
 
-    Unfortunatelly, the UHI effect is weakest at around noon, especially in the summer. This limitation of remote sensing data acts as a hindrance in the analysis of SUHI(Surface Urban Heat Island effect). 
+    Unfortunatelly, the UHI effect is weakest at around noon, especially in the summer. This limitation of remote sensing data acts as a hindrance in the analysis of the SUHI(Surface Urban Heat Island) effect. 
 
 * Other factors which contribute to the LST such as Elevation, Albedo and other socioeconomic factors(e.g. social status, mean family income, etc.) have not been taken into account due to lack of data availability 
 
