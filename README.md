@@ -55,9 +55,8 @@ Data can be explored in the [population notebook](population-eda.ipynb) and the 
 
 * ```sklearn``` for model training and validation 
 
-
+```TODO``` Describe semantics of indices
 ```TODO:``` Analysis of LST and Indices dynamics.  
-```TODO:``` Analysis of each image for sufficient UHI presence.  
 
 ### Limitations 
 * The dataset does not incorporate Land-use-land-cover distribution, although it is an essential factor, if not the most essential when it comes to the UHI effect. However, the spectral indices serve as a proxy. Moreover, since they are calculated from the bands of images, temporal changes are readily reflected in this computation. 
