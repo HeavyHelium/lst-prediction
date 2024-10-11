@@ -55,7 +55,7 @@ Data can be explored in the [population notebook](population-eda.ipynb) and the 
 
 * ```sklearn``` for model training and validation 
 
-```TODO``` Describe semantics of indices
+```TODO``` Describe semantics of indices   
 ```TODO:``` Analysis of LST and Indices dynamics.  
 
 ### Limitations 
