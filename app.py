@@ -18,6 +18,18 @@ from streamlit_folium import folium_static
 
 import plotly.express
 
+# st.markdown(
+#     """
+#     <style>
+#     /* Increase the font size for the whole app */
+#     html, body, label [class*="css"]  {
+#         font-size: 20px;
+#     }
+#     </style>
+#     """, unsafe_allow_html=True
+# )
+
+
 # Initialize the Earth Engine library.
 try:
     ee.Initialize()
@@ -150,7 +162,7 @@ st.sidebar.markdown("### About")
 st.sidebar.info("This application analyzes the SUHI effect in Sofia, Bulgaria, integrating remote-sensing imagery and socioeconomic data.")
 
 st.markdown("# The SUHI effect in Sofia, Bulgaria <a name='main-title'></a>", unsafe_allow_html=True)
-st.markdown("## An analysis based on the integration of remote-sensing imagery and socioeconomic data <a name='sub-title'></a>", unsafe_allow_html=True)
+st.markdown("## Analysis based on the integration of remote-sensing imagery and socioeconomic data <a name='sub-title'></a>", unsafe_allow_html=True)
 st.caption("by Diana Markova, mentored by Dr. Lidia Vitanova and Prof. Dessislava Petrova-Antonova")
 
 st.markdown("### Area of interest <a name='area-of-interest'></a>", unsafe_allow_html=True)
@@ -182,7 +194,7 @@ fig.update_layout(
 fig.update_coloraxes(showscale=False)  # Hide the index scale
 st.plotly_chart(fig)
 
-st.markdown("### Population data <a name='population-data'></a>", unsafe_allow_html=True)
+st.markdown("## Population data <a name='population-data'></a>", unsafe_allow_html=True)
 st.write("Population is obtained from the GHS-POP - R2023A dataset") 
 
 with st.expander("Population stats dataframe"):
@@ -241,7 +253,7 @@ def map_plot(image_id: str):
     with col2:
         max_value = st.number_input("Custom max value", value=mean_urban, format="%.2f")
     with col3:
-        opacity = st.slider("Opacity", min_value=0.0, max_value=1.0, value=0.6)
+        opacity = st.slider("Opacity", min_value=0.0, max_value=1.0, value=0.3)
 
     min_value, max_value = min(min_value, max_value), max(min_value, max_value)
 
@@ -323,8 +335,81 @@ def plot_difference_charts(selected_image_id):
 plot_difference_charts(selected_image_id)
 
 st.markdown("### Indices Correlations <a name='correlation-indices'></a>", unsafe_allow_html=True)
+
+
+def display_correlation(season=None):
+    if season is not None:
+        correlation_data = pd.read_csv(f"stats/correlation_matrix_{season}.csv", index_col=0)
+        fig = plotly.express.imshow(
+            correlation_data, 
+            title=f"{season.capitalize()} Correlation Matrix",
+            color_continuous_scale='PuOr', 
+            aspect="equal"  
+        )
+        fig.update_layout(
+            title_font_size=20, 
+            xaxis_title_font_size=16,
+            yaxis_title_font_size=16,
+            coloraxis_colorbar=dict(
+                title="Correlation",
+                title_font_size=16,
+                tickfont_size=14
+            )
+        )
+        st.plotly_chart(fig)
+    else: 
+        # we load the correlation_matrix_all_seasons.csv
+        correlation_data = pd.read_csv("stats/correlation_matrix_all_seasons.csv", index_col=0)
+        fig = plotly.express.imshow(
+            correlation_data, 
+            title="All Seasons Correlation Matrix",
+            color_continuous_scale='PuOr', 
+            aspect="equal"  
+        )
+        fig.update_layout(
+            title_font_size=20, 
+            xaxis_title_font_size=16,
+            yaxis_title_font_size=16,
+            coloraxis_colorbar=dict(
+                title="Correlation",
+                title_font_size=16,
+                tickfont_size=14
+            )
+        )
+        st.plotly_chart(fig)
+
+col1, col2 = st.columns(2)
+with col1:
+    display_correlation("autumn")
+with col2:
+    display_correlation("spring")
+
+col3, col4 = st.columns(2)
+with col3:
+    display_correlation("summer")
+with col4:
+    display_correlation("winter")
+
+display_correlation()
+
 st.markdown("### Seasonal Dynamics <a name='dynamics-indices'></a>", unsafe_allow_html=True)
 
+season = st.selectbox("Select a season", ["Spring", "Summer", "Autumn", "Winter"])
+
+@st.cache_data
+def load_season_data(season):
+    lst_stats = pd.read_csv("stats/lst_stats_by_year.csv")
+    lst_stats.rename(columns={'Unnamed: 0': 'year'}, inplace=True)
+    lst_stats.set_index('year', inplace=True)
+    season_data = lst_stats[season.lower()].dropna().reset_index()
+    return season_data
+
+season_data = load_season_data(season)
+# st.write(f"Selected season: {season}")
+# st.write(season_data)
+
+fig = plotly.express.bar(season_data, x="year", y=season.lower(), title=f"LST Stats for {season} Season")
+st.plotly_chart(fig)
 
 st.markdown("## Machine Learning Regression <a name='machine-learning-training'></a>", unsafe_allow_html=True)
 algorithm = st.selectbox("Choose an algorithm", ("Linear Regression", "Random Forest", "XGBoost", "Multi-layer Perceptron", "Support Vector Machine", "K-Nearest Neighbors"))

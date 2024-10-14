@@ -91,6 +91,7 @@ parso==0.8.4
 pexpect==4.9.0
 pillow==10.4.0
 platformdirs==4.3.6
+Plost==0.2.5
 plotly==5.24.1
 prompt_toolkit==3.0.48
 proto-plus==1.24.0
@@ -139,6 +140,7 @@ smmap==5.0.1
 soupsieve==2.6
 stack-data==0.6.3
 streamlit==1.39.0
+streamlit_folium==0.23.0
 tenacity==9.0.0
 threadpoolctl==3.5.0
 toml==0.10.2
