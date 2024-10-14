@@ -13,6 +13,7 @@ from sklearn.metrics import mean_squared_error
 from PIL import Image
 import folium
 import folium.plugins
+import branca.colormap as cm
 from streamlit_folium import folium_static
 
 import plotly.express
@@ -25,27 +26,60 @@ except ee.EEException:
     ee.Initialize()
 
 aoiZoomed = ee.Geometry.Polygon([
-[ [23.147785867237445, 42.591241793466885],
-  [23.546040261768695, 42.591241793466885],
-  [23.546040261768695, 42.83542772358794],
-  [23.147785867237445, 42.83542772358794],
-]]);
+    [ [23.147785867237445, 42.591241793466885],
+      [23.546040261768695, 42.591241793466885],
+      [23.546040261768695, 42.83542772358794],
+      [23.147785867237445, 42.83542772358794],
+    ]
+])
+
+# Get the coordinates of the top left and bottom right points
+coords = aoiZoomed.bounds().coordinates().getInfo()[0]
+top_left = coords[0]
+bottom_right = coords[2]
+
+# print("Top Left:", top_left)
+# print("Bottom Right:", bottom_right)
+
+
+geojson_layers = {
+    "urbanWater": ("Sample Water - Druzhba reservoir", 'blue'),
+    "RuralOther": ("Sample Rural North", 'brown'),
+    "UrbanPark": ("Sample Park - Borisova gradina", 'green'),
+    "urbanBuildings": ("Sample Buildings - St. Nedelya Square", 'red')
+}
+
+aoi_larger = ee.Geometry.Polygon(
+    [[[23.054402078174945, 42.9219731159366],
+      [23.054402078174945, 42.39885249302785],
+      [23.730061257862445, 42.39885249302785],
+      [23.730061257862445, 42.9219731159366]]]);
+
 
 # Define urban and rural polygons
 Urban = ee.Geometry.MultiPolygon(
-        [[[[23.246904788408127, 42.688226341159925],
-           [23.323809085283127, 42.65339079664303],
-           [23.359514651689377, 42.69882458798372],
-           [23.310076175126877, 42.71951119054903],
-           [23.271624026689377, 42.71143919029933]]],
+        [[[[23.28930500030052, 42.683309305605796],
+           [23.3311895761537, 42.687217844774736],
+           [23.332563262800576, 42.69756705054173],
+           [23.32724298122744, 42.70866708276199],
+           [23.31642747207472, 42.71749663916301],
+           [23.28467106424651, 42.70967714251649],
+           [23.278062132579702, 42.69788103123934]]],
          [[[23.255144534501877, 42.74170377728034],
-           [23.243471560869065, 42.710934655422136],
-           [23.281923709306565, 42.71698880325915],
-           [23.282610354814377, 42.72859093579189]]],
-         [[[23.380114016923752, 42.70437532879963],
-           [23.383547244462815, 42.674597366330666],
-           [23.426805911455002, 42.6917592910562],
-           [23.41787951985344, 42.7033661401078]]]])
+           [23.234201846513596, 42.714718567030864],
+           [23.255659518632736, 42.707528937725925],
+           [23.280207095537033, 42.722285698139146]]],
+         [[[23.313479223100213, 42.723112430622024],
+           [23.32429388984826, 42.71794172644094],
+           [23.331160344926385, 42.734965589318975],
+           [23.320002355424432, 42.743286666368654]]],
+         [[[23.39190308440334, 42.701886292625346],
+           [23.389843411874686, 42.69242360863146],
+           [23.406666796562945, 42.689144709426664],
+           [23.427610437989152, 42.69368552947923],
+           [23.439583881040793, 42.693181107063346],
+           [23.441772694684165, 42.69507373663753],
+           [23.416280655376184, 42.6978491269261]]]])
 
 Rural = ee.Geometry.MultiPolygon(
         [[[[23.46457141438469, 42.666771974480405],
@@ -57,17 +91,60 @@ Rural = ee.Geometry.MultiPolygon(
            [23.282032020089627, 42.635830026978525],
            [23.267784125802518, 42.64530081266675]]]]);
 
+
+urbanBuildings = ee.Geometry.Polygon(
+    [[[23.319328806750036, 42.69842760252894],
+      [23.319328806750036, 42.69611599160914],
+      [23.322438806750036, 42.69611599160914],
+      [23.322438806750036, 42.69842760252894]]], None, False)
+
+urbanWater = ee.Geometry.Polygon(
+    [[[23.39812287739303, 42.66429802169629],
+      [23.39812287739303, 42.661986410776485],
+      [23.40123287739303, 42.661986410776485],
+      [23.40123287739303, 42.66429802169629]]], None, False)
+
+RuralOther = ee.Geometry.Polygon(
+    [[[23.33460979617574, 42.76828619219489],
+      [23.33460979617574, 42.765974581275085],
+      [23.33771979617574, 42.765974581275085],
+      [23.33771979617574, 42.76828619219489]]], None, False)
+
+UrbanPark = ee.Geometry.Polygon(
+    [[[23.335287603416116, 42.68720648908851],
+      [23.335287603416116, 42.68489487816871],
+      [23.338397603416116, 42.68489487816871],
+      [23.338397603416116, 42.68720648908851]]], None, False)
+
+
+
+
+
 logo = Image.open("./img/logo.png")
 st.sidebar.image(logo, width=200)
 
 st.sidebar.title("Content")
+
 st.sidebar.markdown("---")
-st.sidebar.markdown("[Title](#main-title)")
-st.sidebar.markdown("[Area of Interest](#area-of-interest)")
-st.sidebar.markdown("[Population Data Analysis](#population-data)")
-st.sidebar.markdown("[Remote Sensing Data](#remote-sensing-data)")
-st.sidebar.markdown("[Urban Heat Island Mapping](#urban-heat-island-mapping)")
-st.sidebar.markdown("[Machine Learning Training](#machine-learning-training)")
+st.sidebar.markdown("""
+<ul>
+    <li><a href="#main-title">Topic</a></li>
+    <li><a href="#area-of-interest">Area of Interest</a>
+        <ul>
+            <li><a href="#population-data">Population Data Analysis</a></li>
+            <li><a href="#remote-sensing-data">Remote Sensing Data</a>
+                <ul>
+                    <li><a href="#urban-heat-island-mapping">Urban Heat Island Mapping</a></li>
+                    <li><a href="#correlation-indices">Indices Correlations</a></li>
+                    <li><a href="#dynamics-indices">Seasonal Dynamics</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li><a href="#machine-learning-training">Machine Learning Regression</a></li>
+</ul>
+""", unsafe_allow_html=True)
+
 st.sidebar.markdown("---")
 st.sidebar.markdown("### About")
 st.sidebar.info("This application analyzes the SUHI effect in Sofia, Bulgaria, integrating remote-sensing imagery and socioeconomic data.")
@@ -129,7 +206,7 @@ def map_plot(image_id: str):
     st_band_name = 'ST_B6' if ls_collection in ['LE07', 'LT05', 'LT04'] else 'ST_B10'
     tier = id_list_full[image_id]['tier']
 
-    landsat_image = ee.Image(f"LANDSAT/{ls_collection}/C02/{tier}_L2/{image_id}").preprocess().clip(aoiZoomed)
+    landsat_image = ee.Image(f"LANDSAT/{ls_collection}/C02/{tier}_L2/{image_id}").preprocess().clip(aoi_larger)
     st_band = landsat_image.select(st_band_name).subtract(273.15)
 
     mean_urban = st_band.reduceRegion(
@@ -166,10 +243,18 @@ def map_plot(image_id: str):
     with col3:
         opacity = st.slider("Opacity", min_value=0.0, max_value=1.0, value=0.6)
 
+    min_value, max_value = min(min_value, max_value), max(min_value, max_value)
+
     folium_map = folium.Map(location=[42.7133, 23.3469], zoom_start=10) 
 
-    folium.GeoJson(Urban.getInfo(), name="Urban Areas", style_function=lambda x: {'color': 'green'}).add_to(folium_map)
+    folium.GeoJson(Urban.getInfo(), name="Urban Areas", style_function=lambda x: {'color': 'red'}).add_to(folium_map)
     folium.GeoJson(Rural.getInfo(), name="Rural Areas", style_function=lambda x: {'color': 'yellow'}).add_to(folium_map)
+
+
+    for variable_name, (layer_name, color) in geojson_layers.items():
+        variable = globals()[variable_name]
+        folium.GeoJson(variable.getInfo(), name=layer_name, style_function=lambda x, color=color: {'color': color}).add_to(folium_map)
+  
 
     st_band_url = st_band.getThumbURL({
         'min': min_value,
@@ -178,59 +263,109 @@ def map_plot(image_id: str):
     })
     folium.raster_layers.ImageOverlay(
         image=st_band_url,
-        bounds=[[42.591241793466885, 23.147785867237445], [42.83542772358794, 23.546040261768695]],
-        opacity=opacity
+        bounds=[[42.39885249302785, 23.054402078174945], 
+                [42.9219731159366, 23.730061257862445]],
+        opacity=opacity,
+        name="Surface Temperature"
     ).add_to(folium_map)
 
-    # col1, col2, col3 = st.columns([1, 2, 1])
-    # with col2:
+    # Add color scale
+    colormap = cm.LinearColormap(
+        colors=['blue', 'cyan', 'yellow', 'orange', 'red'],
+        vmin=min_value,
+        vmax=max_value,
+        caption='Surface Temperature (°C)'
+    )
+    colormap.add_to(folium_map)
+    folium.LayerControl().add_to(folium_map)
     folium_static(folium_map)
 
 map_plot(selected_image_id)
 
+def plot_difference_charts(selected_image_id):
+    with st.expander("LST Comparison Of Selected Regions"):
+        def get_mean_lst(image_id, geometry, band_name):
+            ls_collection = image_id.split('_')[0]
+            tier = id_list_full[image_id]['tier']
+            landsat_image = ee.Image(f"LANDSAT/{ls_collection}/C02/{tier}_L2/{image_id}").preprocess().clip(aoi_larger)
+            st_band = landsat_image.select(band_name).subtract(273.15)
+            mean_lst = st_band.reduceRegion(
+                reducer=ee.Reducer.mean(),
+                geometry=geometry,
+                scale=30,
+                bestEffort=True
+            ).get(band_name).getInfo()
+            return mean_lst
+
+        st_band_name = 'ST_B6' if selected_image_id.split('_')[0] in ['LE07', 'LT05', 'LT04'] else 'ST_B10'
+        
+        mean_lst_urban_water = get_mean_lst(selected_image_id, urbanWater, st_band_name)
+        mean_lst_rural_other = get_mean_lst(selected_image_id, RuralOther, st_band_name)
+        mean_lst_urban_park = get_mean_lst(selected_image_id, UrbanPark, st_band_name)
+        mean_lst_urban_buildings = get_mean_lst(selected_image_id, urbanBuildings, st_band_name)
+
+        temperature_difference = mean_lst_urban_buildings - mean_lst_rural_other
+        st.metric(label="Temperature Difference (Sample Buildings - Sample Rural)", value=f"{temperature_difference:.2f} °C")
+
+        
+        data = {
+            "Area": [geojson_layers["urbanWater"][0], geojson_layers["RuralOther"][0], geojson_layers["UrbanPark"][0], geojson_layers["urbanBuildings"][0]],
+            "Mean LST (°C)": [mean_lst_urban_water, mean_lst_rural_other, mean_lst_urban_park, mean_lst_urban_buildings]
+        }
+        df = pd.DataFrame(data)
+        fig = plotly.express.bar(df, x="Area", y="Mean LST (°C)", title=f"Mean LST for Different Areas ({selected_image_id})")
+        st.plotly_chart(fig)
+        
+        df = df.reset_index(drop=True)
+        st.dataframe(df[["Area", "Mean LST (°C)"]])
+        
+    
+plot_difference_charts(selected_image_id)
+
+st.markdown("### Indices Correlations <a name='correlation-indices'></a>", unsafe_allow_html=True)
+st.markdown("### Seasonal Dynamics <a name='dynamics-indices'></a>", unsafe_allow_html=True)
 
 
-st.markdown("### Machine Learning training <a name='machine-learning-training'></a>", unsafe_allow_html=True)
-# Select algorithm
-algorithm = st.selectbox("Choose an algorithm", ("Linear Regression", "Random Forest"))
+st.markdown("## Machine Learning Regression <a name='machine-learning-training'></a>", unsafe_allow_html=True)
+algorithm = st.selectbox("Choose an algorithm", ("Linear Regression", "Random Forest", "XGBoost", "Multi-layer Perceptron", "Support Vector Machine", "K-Nearest Neighbors"))
 
 # Load dataset for training
-data = pd.read_csv("data/training_data.csv")
-X = data.drop(columns=["target"])
-y = data["target"]
+# data = pd.read_csv("data/training_data.csv")
+# X = data.drop(columns=["target"])
+# y = data["target"]
 
-# Train and validate model
-if st.button("Run Model"):
-    def get_linear_regression_model():
-        return LinearRegression()
+# # Train and validate model
+# if st.button("Run Model"):
+#     def get_linear_regression_model():
+#         return LinearRegression()
 
-    def get_random_forest_model():
-        return RandomForestRegressor()
+#     def get_random_forest_model():
+#         return RandomForestRegressor()
 
-    model_mapping = {
-        "Linear Regression": get_linear_regression_model,
-        "Random Forest": get_random_forest_model
-    }
+#     model_mapping = {
+#         "Linear Regression": get_linear_regression_model,
+#         "Random Forest": get_random_forest_model
+#     }
 
-    model = model_mapping[algorithm]()
+#     model = model_mapping[algorithm]()
 
-    # Split data into training and validation sets
-    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+#     # Split data into training and validation sets
+#     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Train the model
-    model.fit(X_train, y_train)
+#     # Train the model
+#     model.fit(X_train, y_train)
 
-    # Validate the model
-    predictions = model.predict(X_val)
-    mse = mean_squared_error(y_val, predictions)
+#     # Validate the model
+#     predictions = model.predict(X_val)
+#     mse = mean_squared_error(y_val, predictions)
 
-    st.write(f"Mean Squared Error: {mse}")
+#     st.write(f"Mean Squared Error: {mse}")
 
-    # Plot predictions vs actual values
-    fig, ax = plt.subplots()
-    ax.scatter(y_val, predictions)
-    ax.plot([y_val.min(), y_val.max()], [y_val.min(), y_val.max()], 'k--', lw=2)
-    ax.set_xlabel('Actual')
-    ax.set_ylabel('Predicted')
-    ax.set_title(f'{algorithm} Predictions vs Actual')
-    st.pyplot(fig)
+#     # Plot predictions vs actual values
+#     fig, ax = plt.subplots()
+#     ax.scatter(y_val, predictions)
+#     ax.plot([y_val.min(), y_val.max()], [y_val.min(), y_val.max()], 'k--', lw=2)
+#     ax.set_xlabel('Actual')
+#     ax.set_ylabel('Predicted')
+#     ax.set_title(f'{algorithm} Predictions vs Actual')
+#     st.pyplot(fig)
