@@ -1,6 +1,5 @@
 # lst-prediction
-LST prediction based on remote-sensing and socio-economic factors 
-
+Examining the **Surface Urban Heat Island** using remote-sensing data and socio-economic factors.
 ## Initialization & Setting 
 
 * Install dependencies 
@@ -8,6 +7,18 @@ LST prediction based on remote-sensing and socio-economic factors
 ```sh 
 pip install -r requirements.txt
 ```
+
+* Run the app 
+
+```sh
+streamlit run app.py
+```
+
+<p align="center">
+    <img src="./img/demo-app.png" alt="img" width="75%">
+</p>
+
+
 
 * Make sure you have **jupyter notebook** in some shape or form 
 
