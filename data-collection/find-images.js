@@ -27,24 +27,29 @@ var seasons = {
 };
 
 var periods = [
-  {'start': '1999-01-01', 'end': '1999-12-31', 'collection': 'LANDSAT_7' }, 
-  {'start': '2000-01-01', 'end': '2000-12-31', 'collection': 'LANDSAT_7'}, 
-  {'start': '2001-01-01', 'end': '2001-12-31', 'collection': 'LANDSAT_7'},
-  {'start': '1999-01-01', 'end': '1999-12-31', 'collection': 'LANDSAT_5' }, 
-  {'start': '2000-01-01', 'end': '2000-12-31', 'collection': 'LANDSAT_5'}, 
-  {'start': '2001-01-01', 'end': '2001-12-31', 'collection': 'LANDSAT_5'},
-  {'start': '2005-01-01', 'end': '2005-12-31', 'collection': 'LANDSAT_5'}, 
-  {'start': '2006-01-01', 'end': '2006-12-31', 'collection': 'LANDSAT_5'}, 
-  {'start': '2007-01-01', 'end': '2007-12-31', 'collection': 'LANDSAT_5'},
-  {'start': '2008-01-01', 'end': '2008-12-31', 'collection': 'LANDSAT_5'},
-  {'start': '2009-01-01', 'end': '2009-12-31', 'collection': 'LANDSAT_5'}, 
-  {'start': '2011-01-01', 'end': '2011-12-31', 'collection': 'LANDSAT_5'}, 
-  {'start': '2012-01-01', 'end': '2012-12-31', 'collection': 'LANDSAT_5'},
-  {'start': '2013-01-01', 'end': '2013-12-31', 'collection': 'LANDSAT_8'},
-  {'start': '2014-01-01', 'end': '2014-12-31', 'collection': 'LANDSAT_8'}, 
-  {'start': '2017-01-01', 'end': '2017-12-31', 'collection': 'LANDSAT_8'}, 
-  {'start': '2018-01-01', 'end': '2018-12-31', 'collection': 'LANDSAT_8'}, 
-  {'start': '2019-01-01', 'end': '2019-12-31', 'collection': 'LANDSAT_8'}, 
+ // {'start': '1999-01-01', 'end': '1999-12-31', 'collection': 'LANDSAT_7' }, 
+ // {'start': '2000-01-01', 'end': '2000-12-31', 'collection': 'LANDSAT_7'}, 
+ // {'start': '2001-01-01', 'end': '2001-12-31', 'collection': 'LANDSAT_7'},
+ // {'start': '1999-01-01', 'end': '1999-12-31', 'collection': 'LANDSAT_5' }, 
+ // {'start': '2000-01-01', 'end': '2000-12-31', 'collection': 'LANDSAT_5'}, 
+ // {'start': '2001-01-01', 'end': '2001-12-31', 'collection': 'LANDSAT_5'},
+ // {'start': '2005-01-01', 'end': '2005-12-31', 'collection': 'LANDSAT_5'}, 
+//  {'start': '2006-01-01', 'end': '2006-12-31', 'collection': 'LANDSAT_5'}, 
+//  {'start': '2007-01-01', 'end': '2007-12-31', 'collection': 'LANDSAT_5'},
+//  {'start': '2008-01-01', 'end': '2008-12-31', 'collection': 'LANDSAT_5'},
+//  {'start': '2009-01-01', 'end': '2009-12-31', 'collection': 'LANDSAT_5'}, 
+//  {'start': '2011-01-01', 'end': '2011-12-31', 'collection': 'LANDSAT_5'}, 
+//  {'start': '2012-01-01', 'end': '2012-12-31', 'collection': 'LANDSAT_5'},
+//  {'start': '2013-01-01', 'end': '2013-12-31', 'collection': 'LANDSAT_8'},
+//  {'start': '2014-01-01', 'end': '2014-12-31', 'collection': 'LANDSAT_8'}, 
+//  {'start': '2017-01-01', 'end': '2017-12-31', 'collection': 'LANDSAT_8'}, 
+//  {'start': '2018-01-01', 'end': '2018-12-31', 'collection': 'LANDSAT_8'}, 
+//  {'start': '2019-01-01', 'end': '2019-12-31', 'collection': 'LANDSAT_8'}, 
+  
+  {'start': '2020-01-01', 'end': '2020-12-31', 'collection': 'LANDSAT_8'},
+  {'start': '2021-01-01', 'end': '2021-12-31', 'collection': 'LANDSAT_8'},
+  {'start': '2022-01-01', 'end': '2022-12-31', 'collection': 'LANDSAT_8'},
+  {'start': '2023-01-01', 'end': '2023-12-31', 'collection': 'LANDSAT_8'}, 
 ];
 
 //Load Collection 2 Level 2 with ST bands 
@@ -145,7 +150,7 @@ periods.forEach(function(period) {
 // Export the combined metadata to a single JSON file
 Export.table.toDrive({
   collection: allMetadata,
-  description: 'Landsat-All-Metadata-new',
+  description: 'Landsat-All-Metadata-new-period',
   fileFormat: 'CSV',
   folder: 'Landsat-Metadata',
 });
