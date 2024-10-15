@@ -344,7 +344,8 @@ def display_correlation(season=None):
             correlation_data, 
             title=f"{season.capitalize()} Correlation Matrix",
             color_continuous_scale='PuOr', 
-            aspect="equal"  
+            aspect="equal",
+            text_auto='.2f'  # Annotate each square with the value, formatted to 2 decimal places
         )
         fig.update_layout(
             title_font_size=20, 
@@ -354,7 +355,17 @@ def display_correlation(season=None):
                 title="Correlation",
                 title_font_size=16,
                 tickfont_size=14
-            )
+            ),
+            annotations=[
+                dict(
+                    text=f"{val:.2f}",
+                    x=col,
+                    y=row,
+                    #font=dict(size=14), 
+                    showarrow=False
+                )
+                for row, col, val in zip(correlation_data.index, correlation_data.columns, correlation_data.values.flatten())
+            ]
         )
         st.plotly_chart(fig)
     else: 
@@ -364,7 +375,8 @@ def display_correlation(season=None):
             correlation_data, 
             title="All Seasons Correlation Matrix",
             color_continuous_scale='PuOr', 
-            aspect="equal"  
+            aspect="equal",
+            text_auto='.2f'  
         )
         fig.update_layout(
             title_font_size=20, 
@@ -374,20 +386,30 @@ def display_correlation(season=None):
                 title="Correlation",
                 title_font_size=16,
                 tickfont_size=14
-            )
+            ),
+            annotations=[
+                dict(
+                    text=f"{val:.2f}",
+                    x=col,
+                    y=row,
+                    #font=dict(size=14), 
+                    showarrow=False
+                )
+                for row, col, val in zip(correlation_data.index, correlation_data.columns, correlation_data.values.flatten())
+            ]
         )
         st.plotly_chart(fig)
 
-col1, col2 = st.columns(2)
-with col1:
+with st.expander("Autumn Correlation Matrix"):
     display_correlation("autumn")
-with col2:
+
+with st.expander("Spring Correlation Matrix"):
     display_correlation("spring")
 
-col3, col4 = st.columns(2)
-with col3:
+with st.expander("Summer Correlation Matrix"):
     display_correlation("summer")
-with col4:
+
+with st.expander("Winter Correlation Matrix"):
     display_correlation("winter")
 
 display_correlation()
@@ -407,8 +429,19 @@ def load_season_data(season):
 season_data = load_season_data(season)
 # st.write(f"Selected season: {season}")
 # st.write(season_data)
+# Plot mean LST per year for all seasons
+lst_stats = pd.read_csv("stats/lst_stats_by_year.csv")
+lst_stats.rename(columns={'Unnamed: 0': 'year'}, inplace=True)
+lst_stats.set_index('year', inplace=True)
+
+# Calculate the mean LST per year across all seasons
+mean_lst_per_year = lst_stats.mean(axis=1).reset_index()
+mean_lst_per_year.columns = ['year', 'mean_lst']
 
 fig = plotly.express.bar(season_data, x="year", y=season.lower(), title=f"LST Stats for {season} Season")
+st.plotly_chart(fig)
+
+fig = plotly.express.bar(mean_lst_per_year, x='year', y='mean_lst', title="Mean LST per Year")
 st.plotly_chart(fig)
 
 st.markdown("## Machine Learning Regression <a name='machine-learning-training'></a>", unsafe_allow_html=True)
