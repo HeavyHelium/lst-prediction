@@ -30,7 +30,7 @@ decorator==5.1.1
 Deprecated==1.2.14
 deprecation==2.1.0
 duckdb==1.1.2
-earthengine-api==1.1.2
+earthengine-api==1.1.5
 ee==0.2
 ee-extra==0.0.15
 eemont==0.3.6
