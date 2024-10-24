@@ -9,13 +9,13 @@ from helper import display_logo
 
 
 def initialize():
-    # try:
-    #     ee.Authenticate()
-    #     ee.Initialize(project="ee-dianamarkovakn")
+  # try:
+    ee.Authenticate()
+    ee.Initialize(project="ee-dianamarkovakn")
     # except ee.EEException:
     #     ee.Authenticate()
     #     ee.Initialize()
-    google.auth.default()
+    #google.auth.default()
 
     aoiZoomed = ee.Geometry.Polygon([
         [ [23.147785867237445, 42.591241793466885],
