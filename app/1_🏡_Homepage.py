@@ -15,6 +15,7 @@ def initialize():
     # except ee.EEException:
     #     ee.Authenticate()
     #     ee.Initialize()
+    google.auth.default()
 
     aoiZoomed = ee.Geometry.Polygon([
         [ [23.147785867237445, 42.591241793466885],
