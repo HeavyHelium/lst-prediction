@@ -18,9 +18,9 @@ color_scale = plotly.colors.diverging.Picnic
 
 
 def display_correlation(season=None):
-    correlation_data = pd.read_csv("../stats/correlation_matrix_all_seasons.csv", index_col=0)
+    correlation_data = pd.read_csv("./stats/correlation_matrix_all_seasons.csv", index_col=0)
     if season is not None:
-        correlation_data = pd.read_csv(f"../stats/correlation_matrix_{season}.csv", index_col=0)
+        correlation_data = pd.read_csv(f"./stats/correlation_matrix_{season}.csv", index_col=0)
     else: 
         season = "all seasons"
     fig = plotly.express.imshow(
@@ -73,7 +73,7 @@ season = st.selectbox("Select a season", ["Spring", "Summer", "Autumn", "Winter"
 
 @st.cache_data
 def load_season_data(season):
-    lst_stats = pd.read_csv("../stats/lst_stats_by_year.csv")
+    lst_stats = pd.read_csv("./stats/lst_stats_by_year.csv")
     lst_stats.rename(columns={'Unnamed: 0': 'year'}, inplace=True)
     lst_stats.set_index('year', inplace=True)
     season_data = lst_stats[season.lower()].dropna().reset_index()
@@ -83,7 +83,7 @@ season_data = load_season_data(season)
 # st.write(f"Selected season: {season}")
 # st.write(season_data)
 # Plot mean LST per year for all seasons
-lst_stats = pd.read_csv("../stats/lst_stats_by_year.csv")
+lst_stats = pd.read_csv("./stats/lst_stats_by_year.csv")
 lst_stats.rename(columns={'Unnamed: 0': 'year'}, inplace=True)
 lst_stats.set_index('year', inplace=True)
 

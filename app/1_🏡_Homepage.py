@@ -25,8 +25,8 @@ def initialize():
         ]
     ])
 
-    st.session_state['id_list'] = pd.read_json("../data/id_list.json")["id"].tolist()
-    st.session_state['id_list_full'] = pd.read_json("../data/id_list.json").set_index("id").to_dict(orient="index")
+    st.session_state['id_list'] = pd.read_json("./data/id_list.json")["id"].tolist()
+    st.session_state['id_list_full'] = pd.read_json("./data/id_list.json").set_index("id").to_dict(orient="index")
 
     coords = aoiZoomed.bounds().coordinates().getInfo()[0]
     top_left = coords[0]
@@ -134,7 +134,7 @@ st.markdown("## Analysis based on the integration of remote-sensing imagery and 
 st.caption("by Diana Markova, mentored by Dr. Lidia Vitanova and Prof. Dessislava Petrova-Antonova")
 
 st.markdown("### Area of interest <a name='area-of-interest'></a>", unsafe_allow_html=True)
-geojson_file = "../shapefiles/sofia-boundaries.json"
+geojson_file = "./shapefiles/sofia-boundaries.json"
 gdf = gpd.read_file(geojson_file)
 
 
