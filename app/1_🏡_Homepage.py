@@ -10,8 +10,8 @@ from helper import display_logo
 
 def initialize():
   # try:
-    ee.Authenticate()
-    ee.Initialize(project="ee-dianamarkovakn")
+    # ee.Authenticate()
+    # ee.Initialize(project="ee-dianamarkovakn")
     # except ee.EEException:
     #     ee.Authenticate()
     #     ee.Initialize()
